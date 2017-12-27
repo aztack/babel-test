@@ -6,21 +6,18 @@ const generate = require('babel-generator').default
 
 const babylon = require('babylon')
 
-const code = `
-import A from 'a'
-import B from 'b'
-
-export default {
-  components: {
-
-  },
-  methods: {
-    init () {
-
-    }
-  }
-}
-`
+const code = [
+"import A from 'a'",
+"import B from 'b'",
+"export default {",
+"  components: {",
+"  },",
+"  methods: {",
+"    init () {",
+"    }",
+"  }",
+"}"].join("\n")
+console.log(code)
 const ast = babylon.parse(code, {sourceType: 'module'})
 var n = []
 traverse(ast, {
@@ -33,7 +30,9 @@ traverse(ast, {
 
 const name = 'UserDialog', src = './user-dialog.vue'
 if (n.length) {
-  const importAst = template(`import ${name} from "${src}"`, {sourceType: 'module'})()
+  const importCode = "import " + name + " from '" + src + "'"
+  console.log(importCode)
+  const importAst = template(importCode, {sourceType: 'module'})()
   // append to last import statement
   n[n.length - 1].insertAfter(importAst);
   console.log(generate(ast).code)
